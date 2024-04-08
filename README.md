@@ -4,7 +4,7 @@ A collection of scripts automating various aspects of the website: <https://neal
 
 ## Compatiblilty
 
-These scripts currently are only compatible with **macOS**! Compatiblilty with Windows is **planned**.
+These scripts currently are only tested to be compatible with **macOS**! Compatiblilty with Windows is functioning in **theory** but it **hasn't been tested** yet.
 
 ## What do the scripts do?
 
