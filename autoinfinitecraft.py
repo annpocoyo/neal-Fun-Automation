@@ -15,7 +15,7 @@ sys.path.append(f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/Library")
 
 # Load custom librarys
 from autoInfiniteCraftLibrary import autoInfiniteCraftClass
-autoPasswordGame = autoInfiniteCraftClass()
+autoInfiniteCraftGame = autoInfiniteCraftClass()
 
 def main():
     pass
