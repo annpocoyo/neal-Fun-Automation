@@ -18,7 +18,7 @@ from autoInfiniteCraftLibrary import autoInfiniteCraftClass
 autoInfiniteCraftGame = autoInfiniteCraftClass()
 
 def main():
-    print(autoInfiniteCraftGame.listOfItems)
+    print(autoInfiniteCraftGame.itemList)
 
 # Good practise to make programs that are runned from the terminal use a main function.
 main()
