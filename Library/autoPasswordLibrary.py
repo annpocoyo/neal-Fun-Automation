@@ -14,6 +14,7 @@ import threading # For feeding Paul in the background
 from selenium import webdriver # For Browser Control
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.service import Service
 
 class autoPasswordClass:
     """This class contains all functions used by autopasswordgame.py"""
@@ -51,10 +52,13 @@ class autoPasswordClass:
     # Internal Variable, is ENDGAME?
     _isEndgame: bool = False
 
-    def __init__(self):
+    def __init__(self, geckoDriverPath = None):
         # Initalize Class
+        # Setup service object for custom gecko driver path
+        service = Service(executable_path = geckoDriverPath)
+
         # Load driver for password game
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Firefox(service=service) # Make sure custom geckoDriver is respected
         self.driver.get("https://neal.fun/password-game/")
 
         # Are we on Mac or something else (This is to fix keybinds)?
