@@ -15,7 +15,7 @@ The Automatic Password Game script requires the following modules:
 * Requests - For getting todays wordle
 * Selenium - For automating and controlling the browser
 
-Alongside these modules the script also requires **Firefox and geckodriver** to be installed. (Chrome has some **bugs** with emojis that make it **impossible** to use!)
+Alongside these modules the script also requires the programs **Firefox and geckodriver** to be installed. (Chrome has some **bugs** with emojis that make it **impossible** to use!)
 
 ## What do the scripts do?
 
