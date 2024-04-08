@@ -2,7 +2,6 @@
 autopasswordgame.py - Automate the Password Game by Neal Agarwal at neal.fun
 Author: annpocoyo
 Credits:
-LXML - Library for xml files or svgs
 Chess - Chess library
 Requests - HTTP library
 Stockfish - Best Chess Move Finder
