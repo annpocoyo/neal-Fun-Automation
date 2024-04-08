@@ -30,7 +30,7 @@ if shutil.which("geckodriver"):
     geckoDriverPath = shutil.which("geckodriver")
 else:
     # No, ask for the path
-    geckoDriverPath = input("Please enter the full path to geckodriver:")
+    geckoDriverPath = input("Please enter the full path to geckodriver:").strip('\"').strip("\'")
 
 # Load custom librarys
 from autoPasswordLibrary import autoPasswordClass
