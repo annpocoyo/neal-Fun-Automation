@@ -10,6 +10,8 @@ import platform # To find out if we are on Mac or something else
 from selenium import webdriver # For Browser Control
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.webelement import WebElement # For type definitions
 
 class autoBrowserBase:
     """This class contains all functions used to control the browser"""
@@ -40,3 +42,14 @@ class autoBrowserBase:
         else:
             # We are on something else, assume the main key is Ctrl.
             self._actionKey = Keys.CONTROL
+        
+        # Initalise action builder
+        self.builder = ActionChains(self.driver)
+    
+    def dragElementToOtherElement(self, element: WebElement, target: WebElement):
+        """Drag `element: WebElement` to `target: WebElement`"""
+        # Setup click and drag action
+        self.builder.click_and_hold(element) \
+            .move_to_element(target) \
+            .release(target) \
+            .perform() # Start action
