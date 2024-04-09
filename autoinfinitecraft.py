@@ -20,5 +20,8 @@ autoInfiniteCraftGame = autoInfiniteCraftClass()
 def main():
     autoInfiniteCraftGame.craft(autoInfiniteCraftGame.itemList[0], autoInfiniteCraftGame.itemList[1])
 
+    while True:
+        pass
+
 # Good practise to make programs that are runned from the terminal use a main function.
 main()
