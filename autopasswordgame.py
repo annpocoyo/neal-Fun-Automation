@@ -14,7 +14,7 @@ import sys # For custom modules
 import json # For geoguesser
 import time # For waiting
 import chess # For analyzing the chess board from the displayed svg
-import shutil # For finding if there is a geckodriver in path
+import shutil # For finding if stockfish is in path
 import datetime # For Wordle
 import requests # For API requests
 from stockfish import Stockfish # For the finding the best move from the so analyzed chess board
@@ -23,14 +23,6 @@ from selenium.webdriver.common.by import By # For browser control
 
 # Add custom modules to path
 sys.path.append(f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/Library")
-
-# Is gecko lib in path,
-if shutil.which("geckodriver"):
-    # Yes, get the path
-    geckoDriverPath = shutil.which("geckodriver")
-else:
-    # No, ask for the path
-    geckoDriverPath = input("Please enter the full path to geckodriver:").strip('\"').strip("\'")
 
 # Is stockfish in path,
 if shutil.which("stockfish"):
@@ -42,7 +34,7 @@ else:
 
 # Load custom librarys
 from autoPasswordLibrary import autoPasswordClass
-autoPasswordGame = autoPasswordClass(geckoDriverPath)
+autoPasswordGame = autoPasswordClass()
 
 # Get today's date
 date = datetime.date.today()

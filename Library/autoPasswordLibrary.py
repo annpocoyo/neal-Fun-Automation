@@ -8,6 +8,7 @@ autoPasswordClass - contains all functions used by autopasswordgame.py
 import os # For loading JSON
 import sys #  ^
 import json # |
+import shutil # For finding if there is a geckodriver in path
 import string # Cleaner way of getting the alphabet
 import platform # To find out if we are on Mac or something else
 import threading # For feeding Paul in the background
@@ -54,6 +55,17 @@ class autoPasswordClass:
 
     def __init__(self, geckoDriverPath = None):
         # Initalize Class
+        # Has the creator of this object not passed a path to geckodriver
+        if geckoDriverPath == None:
+            # No, we need to get one ourselves.
+            # Is geckodriver in path?
+            if shutil.which("geckodriver"):
+                # Yes, get the path
+                geckoDriverPath = shutil.which("geckodriver")
+            else:
+                # No, ask for the path
+                geckoDriverPath = input("Please enter the full path to geckodriver:").strip('\"').strip("\'")
+
         # Setup service object for custom gecko driver path
         service = Service(executable_path = geckoDriverPath)
 
