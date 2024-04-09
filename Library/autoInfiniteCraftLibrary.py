@@ -21,9 +21,15 @@ class autoInfiniteCraftClass(autoBrowserBase):
 
         # Get neal.fun logo to be used as TARGET where items will be dragged and dropped
         self.craftingTarget = self.driver.find_elements(By.CLASS_NAME, "site-title")[0]
+
+        # Get clear button to use for clearing the crafting area
+        self.clearButton = self.driver.find_elements(By.CLASS_NAME, "clear")[0]
     
     def craft(self, item1: WebElement, item2: WebElement):
         """Craft 2 items together"""
+        # Clean up the crafting area to avoid conflicts
+        self.clearButton.click()
+
         # Drag item 1 to crafting target
         super().dragElementToOtherElement(item1, self.craftingTarget)
 
