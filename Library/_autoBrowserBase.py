@@ -53,3 +53,14 @@ class autoBrowserBase:
             .move_to_element(target) \
             .release(target) \
             .perform() # Start action
+    
+    def getAllPairsOfList(self, combinationList: list):
+        """Get all possible Pairs of `list: list`"""
+        # Setup list to return
+        listToReturn: list[list] = []
+        for x in combinationList:
+            for y in combinationList:
+                listToReturn.append([x,y]) # Add combination to returned list
+        
+        # Return list
+        return listToReturn
