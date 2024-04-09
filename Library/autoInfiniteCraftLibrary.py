@@ -5,9 +5,6 @@ Inside this library:
 
 autoInfiniteCraftClass - contains all functions used by autoinfinitecraft.py
 """
-import os # For loading JSON
-import sys #  ^
-import json # |
 from selenium import webdriver # For Browser Control
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
