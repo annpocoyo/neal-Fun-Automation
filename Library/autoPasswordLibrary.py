@@ -8,16 +8,13 @@ autoPasswordClass - contains all functions used by autopasswordgame.py
 import os # For loading JSON
 import sys #  ^
 import json # |
-import shutil # For finding if there is a geckodriver in path
 import string # Cleaner way of getting the alphabet
-import platform # To find out if we are on Mac or something else
 import threading # For feeding Paul in the background
-from selenium import webdriver # For Browser Control
-from selenium.webdriver.common.by import By
+from _autoBrowserBase import autoBrowserBase
+from selenium.webdriver.common.by import By # For Browser Control
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.service import Service
 
-class autoPasswordClass:
+class autoPasswordClass(autoBrowserBase):
     """This class contains all functions used by autopasswordgame.py"""
     # Initalize Variables
     # Contents of password
@@ -55,31 +52,8 @@ class autoPasswordClass:
 
     def __init__(self, geckoDriverPath = None):
         # Initalize Class
-        # Has the creator of this object not passed a path to geckodriver
-        if geckoDriverPath == None:
-            # No, we need to get one ourselves.
-            # Is geckodriver in path?
-            if shutil.which("geckodriver"):
-                # Yes, get the path
-                geckoDriverPath = shutil.which("geckodriver")
-            else:
-                # No, ask for the path
-                geckoDriverPath = input("Please enter the full path to geckodriver:").strip('\"').strip("\'")
-
-        # Setup service object for custom gecko driver path
-        service = Service(executable_path = geckoDriverPath)
-
-        # Load driver for password game
-        self.driver = webdriver.Firefox(service=service) # Make sure custom geckoDriver is respected
-        self.driver.get("https://neal.fun/password-game/")
-
-        # Are we on Mac or something else (This is to fix keybinds)?
-        if platform.system() == "Darwin":
-            # We are on Mac, for most keybinds macOS uses Command instead of Ctrl so we will use that.
-            self._actionKey = Keys.COMMAND
-        else:
-            # We are on something else, assume the main key is Ctrl.
-            self._actionKey = Keys.CONTROL
+        # Contact parent costructor first
+        super().__init__(geckoDriverPath, "https://neal.fun/password-game/")
 
         # Find password box
         self.password_box = self.driver.find_elements(By.CLASS_NAME, "ProseMirror")[0]
