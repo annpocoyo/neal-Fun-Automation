@@ -4,7 +4,18 @@ A collection of scripts automating various aspects of the website: <https://neal
 
 ## Compatiblilty
 
-These scripts currently are only compatible with **macOS**! Compatiblilty with Windows is **planned**.
+These scripts currently are only tested to be compatible with **macOS**! Compatiblilty with Windows is functioning in **theory** but it **hasn't been tested** yet.
+
+## Dependiences
+
+The Automatic Password Game script requires the following modules:
+
+* Chess - For getting the chess game data
+* Stockfish - For getting the best chess move
+* Requests - For getting todays wordle
+* Selenium - For automating and controlling the browser
+
+Alongside these modules the script also requires the programs **Firefox and geckodriver** to be installed. (Chrome has some **bugs** with emojis that make it **impossible** to use!)
 
 ## What do the scripts do?
 

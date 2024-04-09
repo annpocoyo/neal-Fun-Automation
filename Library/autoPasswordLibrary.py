@@ -10,11 +10,11 @@ import sys #  ^
 import json # |
 import string # Cleaner way of getting the alphabet
 import threading # For feeding Paul in the background
-from selenium import webdriver # For Browser Control
-from selenium.webdriver.common.by import By
+from _autoBrowserBase import autoBrowserBase
+from selenium.webdriver.common.by import By # For Browser Control
 from selenium.webdriver.common.keys import Keys
 
-class autoPasswordClass:
+class autoPasswordClass(autoBrowserBase):
     """This class contains all functions used by autopasswordgame.py"""
     # Initalize Variables
     # Contents of password
@@ -50,11 +50,10 @@ class autoPasswordClass:
     # Internal Variable, is ENDGAME?
     _isEndgame: bool = False
 
-    def __init__(self):
+    def __init__(self, geckoDriverPath = None):
         # Initalize Class
-        # Load driver for password game
-        self.driver = webdriver.Firefox()
-        self.driver.get("https://neal.fun/password-game/")
+        # Contact parent costructor first
+        super().__init__(geckoDriverPath, "https://neal.fun/password-game/")
 
         # Find password box
         self.password_box = self.driver.find_elements(By.CLASS_NAME, "ProseMirror")[0]
@@ -101,7 +100,7 @@ class autoPasswordClass:
         self.driver.execute_script("arguments[0].style='white-space: nowrap !important'", self.password_box)
 
         # Refresh password box
-        self.password_box.send_keys(Keys.COMMAND + "a")
+        self.password_box.send_keys(self._actionKey + "a")
         # If Paul exists:
         if self.paulInOurPassword:
             self.password_box.send_keys(Keys.SHIFT + Keys.ARROW_LEFT) # WE MUST PROTECT PAUL, PAUL IS EVERYTHING, PAUL IS LIFE
@@ -205,7 +204,7 @@ class autoPasswordClass:
 
         # Unbold entire password
         self._isPasswordBeingModified = True # Tell everything password is being modified
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select entire password
+        self.password_box.send_keys(self._actionKey + "a") # Select entire password
 
         # Is the entire password not bold already?
         if not "<strong>" + self.password_box.text + "</strong>" in self.password_box.get_attribute("innerHTML"):
@@ -218,7 +217,7 @@ class autoPasswordClass:
             # It isn't our first time bolding now
             self._isFirstTimeBolding = False
 
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select entire password again
+        self.password_box.send_keys(self._actionKey + "a") # Select entire password again
         boldButton.click() # Unbold everything
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Deselect password
         self._isPasswordBeingModified = False # Tell everything we finished
@@ -247,7 +246,7 @@ class autoPasswordClass:
         self.driver.execute_script("arguments[0].style='white-space: nowrap !important'", self.password_box)
 
         # Move cursor to left side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_LEFT) # Go to the left side of the box
 
         # Begin loop
@@ -266,7 +265,7 @@ class autoPasswordClass:
             previousCursor = i
         
         # Move cursor to right side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Go to the right side of the box
 
         # Restore password box wrapping
@@ -318,7 +317,7 @@ class autoPasswordClass:
 
         # Italic entire password
         self._isPasswordBeingModified = True # Tell everything password is being modified
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select entire password
+        self.password_box.send_keys(self._actionKey + "a") # Select entire password
         italicButton.click()
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Deselect entire password
         self._isPasswordBeingModified = False # Tell everything we finished
@@ -334,7 +333,7 @@ class autoPasswordClass:
 
         # Wingdings entire password
         self._isPasswordBeingModified = True # Tell everything password is being modified
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select entire password
+        self.password_box.send_keys(self._actionKey + "a") # Select entire password
         self.fontDropdown.click() # Open dropdown
         wingDingsButton.click() # Wingdings it
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Deselect entire password
@@ -376,7 +375,7 @@ class autoPasswordClass:
         self.driver.execute_script("arguments[0].style='white-space: nowrap !important'", self.password_box)
 
         # Move cursor to left side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_LEFT) # Go to the left side of the box
 
         # Begin loop
@@ -396,7 +395,7 @@ class autoPasswordClass:
             previousCursor = i
         
         # Move cursor to right side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Go to the right side of the box
 
         # Restore password box wrapping
@@ -429,7 +428,7 @@ class autoPasswordClass:
         self.driver.execute_script("arguments[0].style='white-space: nowrap !important'", self.password_box)
 
         # Move cursor to left side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_LEFT) # Go to the left side of the box
 
         # Begin loop
@@ -474,7 +473,7 @@ class autoPasswordClass:
             previousCursor = index
         
         # Move cursor to right side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Go to the right side of the box
 
         # Restore password box wrapping
@@ -494,7 +493,7 @@ class autoPasswordClass:
         self._isPasswordBeingModified = True
 
         # Move cursor to right side of text
-        self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+        self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Go to the right side of the box
 
         # If Paul exists:
@@ -527,7 +526,7 @@ class autoPasswordClass:
             continue # Wait
 
         # Select all
-        self.password_box.send_keys(Keys.COMMAND + "a")
+        self.password_box.send_keys(self._actionKey + "a")
 
         # Paste in old password
         self.password_box.send_keys(finalPasswordBox)
@@ -580,7 +579,7 @@ class autoPasswordClass:
                 break
 
             # Move cursor to right side of text
-            self.password_box.send_keys(Keys.COMMAND + "a") # Select all
+            self.password_box.send_keys(self._actionKey + "a") # Select all
             self.password_box.send_keys(Keys.ARROW_RIGHT) # Go to the right side of the box
 
             # Feed Paul

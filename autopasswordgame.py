@@ -2,7 +2,6 @@
 autopasswordgame.py - Automate the Password Game by Neal Agarwal at neal.fun
 Author: annpocoyo
 Credits:
-LXML - Library for xml files or svgs
 Chess - Chess library
 Requests - HTTP library
 Stockfish - Best Chess Move Finder
@@ -15,6 +14,7 @@ import sys # For custom modules
 import json # For geoguesser
 import time # For waiting
 import chess # For analyzing the chess board from the displayed svg
+import shutil # For finding if stockfish is in path
 import datetime # For Wordle
 import requests # For API requests
 from stockfish import Stockfish # For the finding the best move from the so analyzed chess board
@@ -23,6 +23,14 @@ from selenium.webdriver.common.by import By # For browser control
 
 # Add custom modules to path
 sys.path.append(f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/Library")
+
+# Is stockfish in path,
+if shutil.which("stockfish"):
+    # Yes, get the path
+    stockfishPath = shutil.which("stockfish")
+else:
+    # No, ask for the path
+    stockfishPath = input("Please enter the full path to stockfish:").strip('\"').strip("\'")
 
 # Load custom librarys
 from autoPasswordLibrary import autoPasswordClass
@@ -144,7 +152,7 @@ def main():
 
     # Find best move and send to password game
     # Initalise stockfish
-    SF = Stockfish(depth=25, parameters={"Threads": 2})
+    SF = Stockfish(path=stockfishPath, depth=25, parameters={"Threads": 2})
     
     # Supply analyzed chess board's FEN
     SF.set_fen_position(chessBoard.fen())
