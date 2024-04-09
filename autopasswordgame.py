@@ -32,6 +32,14 @@ else:
     # No, ask for the path
     geckoDriverPath = input("Please enter the full path to geckodriver:").strip('\"').strip("\'")
 
+# Is stockfish in path,
+if shutil.which("stockfish"):
+    # Yes, get the path
+    stockfishPath = shutil.which("stockfish")
+else:
+    # No, ask for the path
+    stockfishPath = input("Please enter the full path to stockfish:").strip('\"').strip("\'")
+
 # Load custom librarys
 from autoPasswordLibrary import autoPasswordClass
 autoPasswordGame = autoPasswordClass(geckoDriverPath)
@@ -152,7 +160,7 @@ def main():
 
     # Find best move and send to password game
     # Initalise stockfish
-    SF = Stockfish(depth=25, parameters={"Threads": 2})
+    SF = Stockfish(path=stockfishPath, depth=25, parameters={"Threads": 2})
     
     # Supply analyzed chess board's FEN
     SF.set_fen_position(chessBoard.fen())
