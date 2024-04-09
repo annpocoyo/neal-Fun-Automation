@@ -24,18 +24,25 @@ class autoBrowserBase:
                 geckoDriverPath = shutil.which("geckodriver")
             else:
                 # No, ask for the path
-                geckoDriverPath = input("Please enter the full path to geckodriver:").strip('\"').strip("\'")
+                geckoDriverPath = \
+                    input("Please enter the full path to geckodriver:")\
+                        .strip('\"') \
+                        .strip("\'") # Strip out quotes from the path just incase
 
         # Setup service object for custom gecko driver path
         service = Service(executable_path = geckoDriverPath)
 
         # Load driver for website
-        self.driver = webdriver.Firefox(service=service) # Make sure custom geckoDriver is respected
+        # Make sure custom geckoDriver is respected
+        self.driver = webdriver.Firefox(service=service)
+
+        # Load the website
         self.driver.get(url)
 
         # Are we on Mac or something else (This is to fix keybinds)?
         if platform.system() == "Darwin":
-            # We are on Mac, for most keybinds macOS uses Command instead of Ctrl so we will use that.
+            # We are on Mac, for most keybinds macOS uses Command
+            # instead of Ctrl so we will use that.
             self._actionKey = Keys.COMMAND
         else:
             # We are on something else, assume the main key is Ctrl.
