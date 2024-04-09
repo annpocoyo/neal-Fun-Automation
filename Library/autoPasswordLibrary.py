@@ -10,7 +10,7 @@ import sys #  ^
 import json # |
 import string # Cleaner way of getting the alphabet
 import threading # For feeding Paul in the background
-from _autoBrowserBase import autoBrowserBase
+from _autoBrowserBase import autoBrowserBase # Base for automatic browser control
 from selenium.webdriver.common.by import By # For Browser Control
 from selenium.webdriver.common.keys import Keys
 
