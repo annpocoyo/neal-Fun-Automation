@@ -4,7 +4,7 @@ A collection of scripts automating various aspects of the website: <https://neal
 
 ## Compatiblilty
 
-These scripts currently are only tested to be compatible with **macOS**! Compatiblilty with Windows is functioning in **theory** but it **hasn't been tested** yet.
+These scripts currently have tested to be compatible with **macOS** and **Windows** using Python **3.12.2**!
 
 ## Dependiences
 
