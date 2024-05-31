@@ -492,6 +492,9 @@ class autoPasswordClass(autoBrowserBase):
         # Tell everything the password is being modified
         self._isPasswordBeingModified = True
 
+        # Disable password box wrapping as it messes up cursor postion
+        self.driver.execute_script("arguments[0].style='white-space: nowrap !important'", self.password_box)
+
         # Move cursor to right side of text
         self.password_box.send_keys(self._actionKey + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Go to the right side of the box
@@ -509,6 +512,9 @@ class autoPasswordClass(autoBrowserBase):
         # Type padding
         for i in range(paddingRequired):
             self.password_box.send_keys("|")
+
+        # Restore password box wrapping
+        self.driver.execute_script("arguments[0].style=''", self.password_box)
 
         # Tell everything that we finished
         self._isPasswordBeingModified = False
