@@ -3,57 +3,57 @@ Auto Password Library - All the external code used to automate the password game
 
 Inside this library:
 
-autoPasswordClass - contains all functions used by autopasswordgame.py
+AutoPasswordClass - contains all functions used by autopasswordgame.py
 """
 import os # For loading JSON
 import sys #  ^
 import json # |
 import string # Cleaner way of getting the alphabet
 import threading # For feeding Paul in the background
-from _autoBrowserBase import autoBrowserBase # Automatic browser control base
+from _auto_browser_base import AutoBrowserBase # Automatic browser control base
 from selenium.webdriver.common.by import By # For Browser Control
 from selenium.webdriver.common.keys import Keys
 
-class autoPasswordClass(autoBrowserBase):
+class AutoPasswordClass(AutoBrowserBase):
     """This class contains all functions used by autopasswordgame.py"""
     # Initalize Variables
     # Contents of password
-    passwordContents: str = ""
+    password_contents: str = ""
 
     # Vowels
     vowels: list[str] = ["a", "e", "i", "o", "u", "y"]
 
     # Roman Numerals
-    romanNumerals: list[str] = ["I", "V", "X", "L", "C", "D", "M"]
+    roman_numerals: list[str] = ["I", "V", "X", "L", "C", "D", "M"]
     
     # Digits used to add to 25
-    digitsThatAddTo25: str = "992"
+    digits_that_add_to_25: str = "992"
 
     # Elements with atomic numbers that add up to 200
-    elementsThatAddTo200: list[str] = ["Fm"]
+    elements_that_add_to_200: list[str] = ["Fm"]
 
     # Is Paul in our password?
-    paulInOurPassword: bool = False
+    paul_in_our_password: bool = False
 
     # Has paul hatched?
-    paulHatched: bool = False
+    paul_hatched: bool = False
 
     # Font size state storage
-    currentFontSize: list[int] = []
+    current_font_size: list[int] = []
 
     # Internal variable, is password being modified
-    _isPasswordBeingModified: bool = False
+    _is_password_being_modified: bool = False
 
     # Internal Variable, is first time bolding?
-    _isFirstTimeBolding: bool = True
+    _is_first_time_bolding: bool = True
 
     # Internal Variable, is ENDGAME?
-    _isEndgame: bool = False
+    _is_endgame: bool = False
 
-    def __init__(self, geckoDriverPath = None):
+    def __init__(self, gecko_driver_path = None):
         # Initalize Class
         # Contact parent costructor first
-        super().__init__(geckoDriverPath, "https://neal.fun/password-game/")
+        super().__init__(gecko_driver_path, "https://neal.fun/password-game/")
 
         # Find password box
         self.password_box = \
@@ -64,10 +64,10 @@ class autoPasswordClass(autoBrowserBase):
             self.driver.find_elements(By.CLASS_NAME, "password-length")[0]
 
         # Load JSON file for the ENTIRE FRICKING PERIODIC TABLE
-        elementsFile = open(f"""{
+        elements_file = open(f"""{
             os.path.dirname(os.path.abspath(sys.argv[0]))
         }/Library/passwordGame/elements.json""")
-        self.elements = json.load(elementsFile)
+        self.elements = json.load(elements_file)
 
         # Overwrite Window.Date to fix impossible question
         self.driver.execute_script("""
@@ -94,12 +94,12 @@ class autoPasswordClass(autoBrowserBase):
         """)
 
         # Close json file
-        elementsFile.close()
+        elements_file.close()
 
-    def updateBox(self):
+    def update_box(self):
         """Refresh the Password Box"""
         # Broadcast the password is being modified
-        self._isPasswordBeingModified = True
+        self._is_password_being_modified = True
 
         # Disable password box wrapping as it messes up cursor postion
         self.driver \
@@ -109,22 +109,22 @@ class autoPasswordClass(autoBrowserBase):
             )
 
         # Refresh password box
-        self.password_box.send_keys(self._actionKey + "a")
+        self.password_box.send_keys(self._action_key + "a")
         # If Paul exists:
-        if self.paulInOurPassword:
+        if self.paul_in_our_password:
              # WE MUST PROTECT PAUL, PAUL IS EVERYTHING, PAUL IS LIFE
             self.password_box.send_keys(Keys.SHIFT + Keys.ARROW_LEFT)
         # Protect the worms food
-        if self.paulHatched:
+        if self.paul_hatched:
             # Run as many times as there are worms in the password
             for i in range(self.password_box.text.count("🐛")):
                  # Protect each worm
                 self.password_box.send_keys(Keys.SHIFT + Keys.ARROW_LEFT)
         self.password_box.send_keys(Keys.BACKSPACE)
         self.password_box.send_keys(
-            str(self.digitsThatAddTo25) \
-            + "".join(self.elementsThatAddTo200) \
-            + self.passwordContents
+            str(self.digits_that_add_to_25) \
+            + "".join(self.elements_that_add_to_200) \
+            + self.password_contents
         )
         
         # Restore password box wrapping
@@ -132,13 +132,13 @@ class autoPasswordClass(autoBrowserBase):
 
         # Wait for password box to update
         while self.password_box.text.replace("🥚", "") \
-            .replace("🐔", "").replace("🐛", "") != str(self.digitsThatAddTo25) \
-            + "".join(self.elementsThatAddTo200) + self.passwordContents:
+            .replace("🐔", "").replace("🐛", "") != str(self.digits_that_add_to_25) \
+            + "".join(self.elements_that_add_to_200) + self.password_contents:
             continue # Wait
 
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
-    def findDigitsThatAddUpTo(self, number: int):
+    def find_digits_that_add_up_to(self, number: int):
         """Find 3 digits that add up to `number: int`"""
         # Loop through all combinations of digits
         for i in range(10):
@@ -149,23 +149,23 @@ class autoPasswordClass(autoBrowserBase):
                         # Yes, return digits
                         return str(i) + str(j) + str(k)
 
-    def fixNumberConflicts(self):
+    def fix_number_conflicts(self):
         """Fix any number conflicts"""
         # Initialize local variables
-        numberToSubtractFrom25 = 0
-        digitsAddedByOtherStuff = []
+        number_to_subtract_from_25 = 0
+        digits_added_by_other_stuff = []
 
         # Get all digits added by other things and add them together
-        digitsAddedByOtherStuff = \
-            [int(i) for i in self.passwordContents if i.isdigit()]
-        numberToSubtractFrom25 = sum(digitsAddedByOtherStuff)
+        digits_added_by_other_stuff = \
+            [int(i) for i in self.password_contents if i.isdigit()]
+        number_to_subtract_from_25 = sum(digits_added_by_other_stuff)
 
         # Find digits to replace previous ones to fix number conflicts.
-        self.digitsThatAddTo25 = \
-            self.findDigitsThatAddUpTo(25 - numberToSubtractFrom25)
-        self.updateBox()
+        self.digits_that_add_to_25 = \
+            self.find_digits_that_add_up_to(25 - number_to_subtract_from_25)
+        self.update_box()
 
-    def findElementsThatAddUpTo(self, number: int):
+    def find_elements_that_addup_to(self, number: int):
         """Find elements that add up to `number: int`"""
         # Initalise Variables
         elements: list[str] = []
@@ -182,94 +182,94 @@ class autoPasswordClass(autoBrowserBase):
         # Return elements
         return elements
 
-    def fixElementConflicts(self):
+    def fix_element_conflicts(self):
         """Fix any element conflicts"""
         # Initialize local variables
-        numberToSubtractFrom200 = 0
-        elementsAddedByOtherStuff = []
+        number_to_subtract_from_200 = 0
+        elements_added_by_other_stuff = []
 
         # Get all elements added by other things
         for i in self.elements:
-            for j in range(len(self.passwordContents)):
-                x = self.passwordContents[j]
+            for j in range(len(self.password_contents)):
+                x = self.password_contents[j]
 
                 # Check if single character element symbol exists in string
                 if ((x == i["symbol"]) and (
-                    (len(self.passwordContents) - 1 == j) or (
+                    (len(self.password_contents) - 1 == j) or (
                         not any(ext["symbol"] == 
-                                x + self.passwordContents[j + 1]
+                                x + self.password_contents[j + 1]
                                 for ext in self.elements)
                 ))):
                     # Yes: add it in
-                    elementsAddedByOtherStuff.append(i)
+                    elements_added_by_other_stuff.append(i)
                 # Check if double character element symbol exists in string
-                elif ((len(self.passwordContents) - 1 != j) and 
-                      (x + self.passwordContents[j + 1] == i["symbol"])):
+                elif ((len(self.password_contents) - 1 != j) and 
+                      (x + self.password_contents[j + 1] == i["symbol"])):
                     # Yes: add it in
-                    elementsAddedByOtherStuff.append(i)
+                    elements_added_by_other_stuff.append(i)
 
         # Add all the element's numbers together
-        numberToSubtractFrom200 = \
-            sum(i["number"] for i in elementsAddedByOtherStuff)
+        number_to_subtract_from_200 = \
+            sum(i["number"] for i in elements_added_by_other_stuff)
 
         # Find elements to replace previous ones to fix element conflicts.
-        self.elementsThatAddTo200 = \
-            self.findElementsThatAddUpTo(200 - numberToSubtractFrom200)
-        self.updateBox()
+        self.elements_that_add_to_200 = \
+            self.find_elements_that_addup_to(200 - number_to_subtract_from_200)
+        self.update_box()
     
-    def boldVowels(self):
+    def bold_vowels(self):
         """Bold all vowels"""
         # Initalise Variables
         # Postions of Vowels
-        postionsOfVowels: list[int] = []
+        postions_of_vowels: list[int] = []
 
         # Previous postion of cursor
-        previousCursor: int = 0
+        previous_cursor: int = 0
 
         # Find bold button
-        boldButton = self.driver.find_elements(By.CLASS_NAME, "toolbar")[0] \
+        bold_button = self.driver.find_elements(By.CLASS_NAME, "toolbar")[0] \
             .find_elements(By.XPATH, ".//*[contains(text(), 'Bold')]")[0]
 
         # Unbold entire password
-        self._isPasswordBeingModified = True # Broadcast the password is being modified
-        self.password_box.send_keys(self._actionKey + "a") # Select entire password
+        self._is_password_being_modified = True # Broadcast the password is being modified
+        self.password_box.send_keys(self._action_key + "a") # Select entire password
 
         # Is the entire password not bold already?
         if not ("<strong>" + self.password_box.text + "</strong>"
                 in self.password_box.get_attribute("innerHTML")):
-            boldButton.click() # Bold everything
+            bold_button.click() # Bold everything
 
-        if self._isFirstTimeBolding:
+        if self._is_first_time_bolding:
             # First time bolding, there is a fire now
-            self.updateBox() # Put out fire
+            self.update_box() # Put out fire
 
             # It isn't our first time bolding now
-            self._isFirstTimeBolding = False
+            self._is_first_time_bolding = False
 
-        self.password_box.send_keys(self._actionKey + "a") # Select entire password again
-        boldButton.click() # Unbold everything
+        self.password_box.send_keys(self._action_key + "a") # Select entire password again
+        bold_button.click() # Unbold everything
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Deselect password
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
         # Get contents of password box but strip out incompatible characters
-        truePasswordBoxContents = self.password_box.text.replace("🏋️‍♂️", "0")
+        true_password_box_contents = self.password_box.text.replace("🏋️‍♂️", "0")
 
         # Get all locations of vowels
         # Loop through vowels
         for i in self.vowels:
             # Loop through password
-            for j in range(len(truePasswordBoxContents)):
-                x = truePasswordBoxContents[j]
+            for j in range(len(true_password_box_contents)):
+                x = true_password_box_contents[j]
                 # If current character is vowel
                 if i.casefold() == x.casefold():
                     # Record postion of character
-                    postionsOfVowels.append(j)
+                    postions_of_vowels.append(j)
         
         # Sort postions of vowels in ascending order
-        postionsOfVowels.sort()
+        postions_of_vowels.sort()
         
         # Loop through vowel postions
-        self._isPasswordBeingModified = True # Broadcast the password is being modified
+        self._is_password_being_modified = True # Broadcast the password is being modified
 
         # Disable password box wrapping as it messes up cursor postion
         self.driver.execute_script(
@@ -277,37 +277,37 @@ class autoPasswordClass(autoBrowserBase):
             self.password_box)
 
         # Move cursor to left side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_LEFT) # Move to left of box
 
         # Begin loop
-        for i in postionsOfVowels:            
+        for i in postions_of_vowels:            
             # Move cursor to postion of vowel
-            for j in range(i - previousCursor):
+            for j in range(i - previous_cursor):
                 self.password_box.send_keys(Keys.ARROW_RIGHT) # Move cursor right by one
             
             # Select vowel
             self.password_box.send_keys(Keys.SHIFT + Keys.ARROW_RIGHT)
 
             # Bold vowel
-            boldButton.click()
+            bold_button.click()
 
             # Set old cursor for efficent moving of cursor
-            previousCursor = i
+            previous_cursor = i
         
         # Move cursor to right side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Move to right of box
 
         # Restore password box wrapping
         self.driver.execute_script("arguments[0].style=''", self.password_box)
 
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
     def getUnusedLetters(self, text : str):
         """Get all unused letters in `text: str`"""
         # Initalise variables
-        unusedLetters: list[str] = []
+        unused_letters: list[str] = []
 
         # Get the alphabet minus hex code characters
         alphabet: list[str] = list(string.ascii_lowercase)
@@ -323,97 +323,97 @@ class autoPasswordClass(autoBrowserBase):
                 # Check if letter not in text
                 if not letter in text.casefold():
                     # It isn't, add to unused letters
-                    unusedLetters.append(letter)
+                    unused_letters.append(letter)
 
         # Return result
-        return unusedLetters
+        return unused_letters
     
-    def sacrificeTheWorthless(self):
+    def sacrifice_the_worthless(self):
         """Self explanatory"""
         # Get 2 unused characters
-        unusedCharacters: list[str] = \
+        unused_characters: list[str] = \
             self.getUnusedLetters(self.password_box.text)[:2]
 
         # Sacrifice characters
         # Press buttons
         button1 = self.driver.find_elements(By.CLASS_NAME, "letters")[0] \
             .find_elements(By.XPATH, ".//*[contains(text(), '"
-                           + unusedCharacters[0].upper() + "')]")[0].click()
+                           + unused_characters[0].upper() + "')]")[0].click()
         button2 = self.driver.find_elements(By.CLASS_NAME, "letters")[0] \
             .find_elements(By.XPATH, ".//*[contains(text(), '" \
-                           + unusedCharacters[1].upper() + "')]")[0].click()
+                           + unused_characters[1].upper() + "')]")[0].click()
 
         # Commit the very legal act of SACRIFICE
-        sacrificeButton = \
+        sacrifice_button = \
             self.driver.find_elements(By.CLASS_NAME, "sacrafice-btn")[0].click()
 
-    def italicEverything(self):
+    def italic_everything(self):
         """Italic everything to statify rule 26"""
         # Find bold button
-        italicButton = self.driver.find_elements(By.CLASS_NAME, "toolbar")[0] \
+        italic_button = self.driver.find_elements(By.CLASS_NAME, "toolbar")[0] \
             .find_elements(By.XPATH, ".//*[contains(text(), 'Italic')]")[0]
 
         # Italic entire password
-        self._isPasswordBeingModified = True # Broadcast the password is being modified
-        self.password_box.send_keys(self._actionKey + "a") # Select entire password
-        italicButton.click()
+        self._is_password_being_modified = True # Broadcast the password is being modified
+        self.password_box.send_keys(self._action_key + "a") # Select entire password
+        italic_button.click()
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Deselect entire password
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
-    def loadFontDropdown(self):
+    def load_font_dropdown(self):
         """Find and load the font dropdown - Must be run before any font changing functions"""
-        self.fontDropdown = \
+        self.font_dropdown = \
             self.driver.find_elements(By.CLASS_NAME, "toolbar")[0] \
                 .find_elements(By.XPATH, ".//*[contains(text(), 'Wingdings')]")[0] \
                 .find_element(By.XPATH, "./..")
 
-    def wingdingEverything(self):
+    def wingding_everything(self):
         """Turn everything into the WingDings font because computers can understand symbols"""
         # Get wingdings button
-        wingDingsButton = \
-            self.fontDropdown \
+        wingdings_button = \
+            self.font_dropdown \
                 .find_element(By.XPATH, ".//*[contains(text(), 'Wingdings')]")
 
         # Wingdings entire password
-        self._isPasswordBeingModified = True # Broadcast the password is being modified
-        self.password_box.send_keys(self._actionKey + "a") # Select entire password
-        self.fontDropdown.click() # Open dropdown
-        wingDingsButton.click() # Wingdings it
+        self._is_password_being_modified = True # Broadcast the password is being modified
+        self.password_box.send_keys(self._action_key + "a") # Select entire password
+        self.font_dropdown.click() # Open dropdown
+        wingdings_button.click() # Wingdings it
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Deselect entire password
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
-    def timesNewRomanNumerals(self):
+    def times_new_roman_numerals(self):
         """Set the font to Times New Roman for all roman numerals"""
         # Initalise Variables
         # Postions of Roman Numerals
-        postionsOfRomanNumerals: list[int] = []
+        postions_of_roman_numerals: list[int] = []
 
         # Previous postion of cursor
-        previousCursor: int = 0
+        previous_cursor: int = 0
 
         # Find Times New Roman button
-        TimesNewRomanButton = self.fontDropdown \
+        times_new_roman_button = self.font_dropdown \
             .find_elements(By.XPATH, ".//*[contains(text(), 'Times New Roman')]")[0]
 
         # Get contents of password box but strip out incompatible characters
-        truePasswordBoxContents = self.password_box.text.replace("🏋️‍♂️", "0")
+        true_password_box_contents = self.password_box.text.replace("🏋️‍♂️", "0")
 
         # Get all locations of roman numerals
         # Loop through roman numerals
-        for i in self.romanNumerals:
+        for i in self.roman_numerals:
             # Loop through password
-            for j in range(len(truePasswordBoxContents)):
-                x = truePasswordBoxContents[j]
+            for j in range(len(true_password_box_contents)):
+                x = true_password_box_contents[j]
                 # If current character is roman numeral
                 if i == x:
                     # Record postion of character
-                    postionsOfRomanNumerals.append(j)
+                    postions_of_roman_numerals.append(j)
 
         # Sort postions of Roman Numerals in ascending order
-        postionsOfRomanNumerals.sort()
+        postions_of_roman_numerals.sort()
         
         # Loop through roman numeral postions
-        self._isPasswordBeingModified = True # Broadcast the password is being modified
+        self._is_password_being_modified = True # Broadcast the password is being modified
 
         # Disable password box wrapping as it messes up cursor postion
         self.driver \
@@ -423,58 +423,58 @@ class autoPasswordClass(autoBrowserBase):
             )
 
         # Move cursor to left side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_LEFT) # Move to left of box
 
         # Begin loop
-        for i in postionsOfRomanNumerals:
+        for i in postions_of_roman_numerals:
             # Move cursor to postion of Roman Numeral
-            for j in range(i - previousCursor):
+            for j in range(i - previous_cursor):
                 self.password_box.send_keys(Keys.ARROW_RIGHT) # Move cursor right by one
             
             # Select roman numeral
             self.password_box.send_keys(Keys.SHIFT + Keys.ARROW_RIGHT)
 
             # Set font to Times New Roman
-            self.fontDropdown.click()
-            TimesNewRomanButton.click()
+            self.font_dropdown.click()
+            times_new_roman_button.click()
 
             # Set old cursor for efficent moving of cursor
-            previousCursor = i
+            previous_cursor = i
         
         # Move cursor to right side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Move to right of box
 
         # Restore password box wrapping
         self.driver.execute_script("arguments[0].style=''", self.password_box)
 
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
-    def fontSizeFix(self):
+    def font_size_fix(self):
         """Set font size correctly for numbers and letters"""
         # Initalise variables
         # Occurences of letters
-        letterOccurences: dict = dict.fromkeys(list(string.ascii_lowercase), 0)
+        letter_occurences: dict = dict.fromkeys(list(string.ascii_lowercase), 0)
 
         # Allowed font sizes
-        allowedFontSizes: list[int] = \
+        allowed_font_sizes: list[int] = \
             [0, 1, 4, 9, 12, 16, 25, 28, 32, 36, 42, 49, 64, 81]
 
         # Previous postion of cursor
-        previousCursor: int = 0
+        previous_cursor: int = 0
 
         # Find Font Size Dropdown
-        fontSizeDropdown = \
+        font_size_dropdown = \
             self.driver.find_elements(By.CLASS_NAME, "toolbar")[0] \
                 .find_elements(By.XPATH, ".//*[contains(text(), '1px')]")[0] \
                 .find_element(By.XPATH, "./..")
 
         # Get contents of password box but strip out incompatible characters
-        truePasswordBoxContents = self.password_box.text.replace("🏋️‍♂️", "=")
+        true_password_box_contents = self.password_box.text.replace("🏋️‍♂️", "=")
         
         # Loop through characters positions
-        self._isPasswordBeingModified = True # Broadcast the password is being modified
+        self._is_password_being_modified = True # Broadcast the password is being modified
 
         # Disable password box wrapping as it messes up cursor postion
         self.driver \
@@ -484,35 +484,35 @@ class autoPasswordClass(autoBrowserBase):
             )
 
         # Move cursor to left side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_LEFT) # Move to left of box
 
         # Begin loop
-        for index in range(len(truePasswordBoxContents)):
+        for index in range(len(true_password_box_contents)):
             # Get character
-            character = truePasswordBoxContents[index]
+            character = true_password_box_contents[index]
 
             # Check type of character and get font size
             if character.isdigit():
                 # Set font size to character squared
-                fontSize = int(character) ** 2
+                font_size = int(character) ** 2
             elif character.isalpha():
                 # How many times have we hit this letter
-                letterHits = letterOccurences[character.lower()]
+                letter_hits = letter_occurences[character.lower()]
 
                 # Increase the letter occurences by one
-                letterOccurences[character.lower()] += 1
+                letter_occurences[character.lower()] += 1
 
                 # What font size to use
-                fontSize = allowedFontSizes[letterHits]
+                font_size = allowed_font_sizes[letter_hits]
             elif character == "|":
                 # Override for retyping password
-                fontSize = allowedFontSizes[1]
+                font_size = allowed_font_sizes[1]
             else:
                 continue # Font size doesn't matter
 
             # Move cursor to position of character
-            for j in range(index - previousCursor):
+            for j in range(index - previous_cursor):
                 self.password_box.send_keys(Keys.ARROW_RIGHT) # Move cursor right by one
             
             # Select position of character
@@ -520,129 +520,129 @@ class autoPasswordClass(autoBrowserBase):
 
             # Set font size to correct font size
             # Open up font size dropdown
-            fontSizeDropdown.click()
+            font_size_dropdown.click()
 
             # Set font
-            fontSizeDropdown.find_elements(By.XPATH, ".//*[contains(text(), '" \
-                                           + str(fontSize) + "px')]")[0].click()
+            font_size_dropdown.find_elements(By.XPATH, ".//*[contains(text(), '" \
+                                           + str(font_size) + "px')]")[0].click()
 
             # Set old cursor for efficent moving of cursor
-            previousCursor = index
+            previous_cursor = index
         
         # Move cursor to right side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Move to right of box
 
         # Restore password box wrapping
         self.driver.execute_script("arguments[0].style=''", self.password_box)
 
-        self._isPasswordBeingModified = False # Tell everything we finished
+        self._is_password_being_modified = False # Tell everything we finished
 
-    def fixPasswordLength(self):
+    def fix_password_length(self):
         """Fix password length by making it a prime number and putting 
            the length in the password"""
         # Get current length of password
-        lengthOfPassword = int(self.password_length_counter.text)
+        password_length = int(self.password_length_counter.text)
 
         # How much padding do we need
-        paddingRequired = 113 - lengthOfPassword
+        padding_required = 113 - password_length
 
         # Tell everything the password is being modified
-        self._isPasswordBeingModified = True
+        self._is_password_being_modified = True
 
         # Move cursor to right side of text
-        self.password_box.send_keys(self._actionKey + "a") # Select all
+        self.password_box.send_keys(self._action_key + "a") # Select all
         self.password_box.send_keys(Keys.ARROW_RIGHT) # Move to right of box
 
         # If Paul exists:
-        if self.paulInOurPassword:
+        if self.paul_in_our_password:
              # WE MUST PROTECT PAUL, PAUL IS EVERYTHING, PAUL IS LIFE
             self.password_box.send_keys(Keys.ARROW_LEFT)
 
         # Protect the worms food
-        if self.paulHatched:
+        if self.paul_hatched:
             # Run as many times as there are worms in the password
             for i in range(self.password_box.text.count("🐛")):
                 # Protect each worm
                 self.password_box.send_keys(Keys.ARROW_LEFT)
 
         # Type padding
-        for i in range(paddingRequired):
+        for i in range(padding_required):
             self.password_box.send_keys("|")
 
         # Tell everything that we finished
-        self._isPasswordBeingModified = False
+        self._is_password_being_modified = False
 
-    def finalSteps(self):
+    def final_steps(self):
         """EVERYTHING HAS BEEN LEADING UP TO THIS MOMENT, EVERYTHING"""
         # Get final password box text
-        finalPasswordBox = \
+        final_password_box = \
             self.driver.find_elements(By.CLASS_NAME, "password-final")[0].text
 
         # Stop feeding Paul and tell everything we are in the endgame
-        self._isEndgame = True
+        self._is_endgame = True
         
         # Wait for Paul feeding to stop
-        while self.feedPaulThread.is_alive():
+        while self._feed_paul_thread.is_alive():
             continue # Wait
 
         # Select all
-        self.password_box.send_keys(self._actionKey + "a")
+        self.password_box.send_keys(self._action_key + "a")
 
         # Paste in old password
-        self.password_box.send_keys(finalPasswordBox)
+        self.password_box.send_keys(final_password_box)
 
         # FORMATTING
         # Bold all vowels
-        self.boldVowels()
+        self.bold_vowels()
 
         # Italic password
-        self.italicEverything()
+        self.italic_everything()
 
         # Reload font dropdown
-        self.loadFontDropdown()
+        self.load_font_dropdown()
 
         # Wingding everything
-        self.wingdingEverything()
+        self.wingding_everything()
 
         # Times New Roman Numerals
-        self.timesNewRomanNumerals()
+        self.times_new_roman_numerals()
 
         # Font size
-        self.fontSizeFix()
+        self.font_size_fix()
 
-    def startFeedingPaul(self):
+    def start_feeding_paul(self):
         """
         Start feeding Paul because PAUL IS LIFE
 
         Notice - This function runs in the background and will return instantly
         """
-        if self.paulHatched:
+        if self.paul_hatched:
             # SHOULDN'T BE CALLED, RAISE A TYPEERROR
             raise TypeError("Paul already hatched, function shouldn't be called")
         
         # Paul has hatched, so tell the rest of the class
-        self.paulHatched = True
+        self.paul_hatched = True
 
         # Start feeding Paul in the background
-        self.feedPaulThread = \
-            threading.Thread(target=self._paulFeedThread,
+        self._feed_paul_thread = \
+            threading.Thread(target=self._paul_feed_thread,
                              name="Paul Feeding Thread")
-        self.feedPaulThread.start()
+        self._feed_paul_thread.start()
     
-    def _paulFeedThread(self):
+    def _paul_feed_thread(self):
         """Internal function to feed Paul - DO NOT CALL DIRECTLY - WILL NEVER RETURN"""
         while True:
             # Wait for password to not be actively edited
-            while self._isPasswordBeingModified:
+            while self._is_password_being_modified:
                 continue # Wait
 
             # If we are in the endgame, STOP
-            if self._isEndgame:
+            if self._is_endgame:
                 break
 
             # Move cursor to right side of text
-            self.password_box.send_keys(self._actionKey + "a") # Select all
+            self.password_box.send_keys(self._action_key + "a") # Select all
             self.password_box.send_keys(Keys.ARROW_RIGHT) # Move to right of box
 
             # Feed Paul
@@ -652,6 +652,6 @@ class autoPasswordClass(autoBrowserBase):
             while self.password_box.text.count("🐛") >= 7:
                 continue # Wait
 
-    def RGBToHex(self, r: int, g: int, b: int):
+    def rgb_to_hex(self, r: int, g: int, b: int):
         """Convert RGB color code to hex color code"""
         return '#{:02x}{:02x}{:02x}'.format(r, g, b)
