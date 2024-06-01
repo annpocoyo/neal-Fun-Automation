@@ -4,18 +4,18 @@ A collection of scripts automating various aspects of the website: <https://neal
 
 ## Compatiblilty
 
-These scripts currently have tested to be compatible with **macOS** and **Windows** using Python **3.12.2**!
+These scripts currently have been tested to be compatible with **macOS** and **Windows** using Python **3.12.2**!
 
 ## Dependiences
 
-The Automatic Password Game script requires the following modules:
+Automating the password game requires the following modules:
 
-* Chess - For getting the chess game data
-* Stockfish - For getting the best chess move
-* Requests - For getting todays wordle
-* Selenium - For automating and controlling the browser
+* Chess - for getting the chess game data
+* Stockfish - for getting the best chess move
+* Requests - for getting today's Wordle
+* Selenium - for automating and controlling the browser
 
-Alongside these modules the script also requires the programs **Firefox and geckodriver** to be installed. (Chrome has some **bugs** with emojis that make it **impossible** to use!)
+Alongside these modules you also need the programs **Firefox and GeckoDriver** to be installed. (Chrome has some **bugs** with emojis that make it **impossible** to use!)
 
 ## What do the scripts do?
 
