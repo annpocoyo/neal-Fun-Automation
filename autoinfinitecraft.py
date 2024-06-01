@@ -18,8 +18,13 @@ from auto_infinite_craft_library import AutoInfiniteCraftClass
 auto_infinite_craft = AutoInfiniteCraftClass()
 
 def main():
-    auto_infinite_craft.craft(auto_infinite_craft.item_list[0],
-        auto_infinite_craft.item_list[1])
+    # Get list of crafting combinations
+    craftingCombinations = auto_infinite_craft\
+        .get_all_pairs_of_list(auto_infinite_craft.item_list)
+
+    # Craft all of the combinations together
+    for x in craftingCombinations:
+        auto_infinite_craft.craft(x[0], x[1])
 
     while True:
         pass
