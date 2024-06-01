@@ -35,7 +35,8 @@ class autoInfiniteCraftClass(AutoBrowserBase):
 
     def getItemList(self):
         """Find and return a array of crafted item elements"""
-        return self.driver.find_elements(By.CLASS_NAME, "items-inner")[0].find_elements(By.CLASS_NAME, "item")
+        return self.driver.find_elements(By.CLASS_NAME, "items-inner")[0] \
+            .find_elements(By.CLASS_NAME, "item")
 
     # Setup item list and make sure it auto updates every time it is requested
     itemList = property(getItemList)

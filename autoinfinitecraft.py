@@ -18,7 +18,8 @@ from autoInfiniteCraftLibrary import autoInfiniteCraftClass
 autoInfiniteCraftGame = autoInfiniteCraftClass()
 
 def main():
-    autoInfiniteCraftGame.craft(autoInfiniteCraftGame.itemList[0], autoInfiniteCraftGame.itemList[1])
+    autoInfiniteCraftGame.craft(autoInfiniteCraftGame.itemList[0],
+        autoInfiniteCraftGame.itemList[1])
 
     while True:
         pass
