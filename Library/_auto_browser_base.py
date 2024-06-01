@@ -53,7 +53,7 @@ class AutoBrowserBase:
         # Initalise action builder
         self.builder = ActionChains(self.driver)
     
-    def dragElementToOtherElement(self, element: WebElement, target: WebElement):
+    def drag_element_to_other_element(self, element: WebElement, target: WebElement):
         """Drag `element: WebElement` to `target: WebElement`"""
         # Setup click and drag action
         self.builder.click_and_hold(element) \
@@ -61,13 +61,13 @@ class AutoBrowserBase:
             .release(target) \
             .perform() # Start action
     
-    def getAllPairsOfList(self, combinationList: list):
+    def get_all_pairs_of_list(self, combination_list: list):
         """Get all possible Pairs of `list: list`"""
         # Setup list to return
-        listToReturn: list[list] = []
-        for x in combinationList:
-            for y in combinationList:
-                listToReturn.append([x,y]) # Add combination to returned list
+        list_to_return: list[list] = []
+        for x in combination_list:
+            for y in combination_list:
+                list_to_return.append([x,y]) # Add combination to returned list
         
         # Return list
-        return listToReturn
+        return list_to_return

@@ -14,12 +14,12 @@ from selenium.webdriver.common.by import By # For browser control
 sys.path.append(f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/Library")
 
 # Load custom librarys
-from autoInfiniteCraftLibrary import autoInfiniteCraftClass
-autoInfiniteCraftGame = autoInfiniteCraftClass()
+from auto_infinite_craft_library import AutoInfiniteCraftClass
+auto_infinite_craft = AutoInfiniteCraftClass()
 
 def main():
-    autoInfiniteCraftGame.craft(autoInfiniteCraftGame.itemList[0],
-        autoInfiniteCraftGame.itemList[1])
+    auto_infinite_craft.craft(auto_infinite_craft.item_list[0],
+        auto_infinite_craft.item_list[1])
 
     while True:
         pass
