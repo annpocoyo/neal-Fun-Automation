@@ -61,13 +61,16 @@ class AutoBrowserBase:
             .release(target) \
             .perform() # Start action
     
-    def get_all_pairs_of_list(self, combination_list: list):
-        """Get all possible Pairs of `list: list`"""
+    def get_all_pairs_of_list(self, combination_list: list, order_matters = False):
+        """Get all possible pairs of `combination_list: list`"""
         # Setup list to return
         list_to_return: list[list] = []
         for x in combination_list:
             for y in combination_list:
-                list_to_return.append([x,y]) # Add combination to returned list
+                # Is this a repeat (if order doesn't matter)
+                if (not [y,x] in list_to_return) or order_matters:
+                    # Add combination to returned list
+                    list_to_return.append([x,y])
         
         # Return list
         return list_to_return
