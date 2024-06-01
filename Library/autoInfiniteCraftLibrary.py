@@ -5,11 +5,11 @@ Inside this library:
 
 autoInfiniteCraftClass - contains all functions used by autoinfinitecraft.py
 """
-from _autoBrowserBase import autoBrowserBase # Base for automatic browser control
+from _auto_browser_base import AutoBrowserBase # Base for automatic browser control
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement # For intelisense
 
-class autoInfiniteCraftClass(autoBrowserBase):
+class autoInfiniteCraftClass(AutoBrowserBase):
     """This class contains all functions used by autoinfinitecraft.py"""
     def __init__(self):
         # Initalize Class
