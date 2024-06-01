@@ -22,4 +22,4 @@ Alongside these modules you also need the programs **Firefox and GeckoDriver** t
 | Script Name: | Script Purpose: |
 | ------------ | --------------- |
 | `autopasswordgame.py` | Automate completing the password game! **Doesn't** have 100% success rate. |
-| `autoinfinitecraft.py` (**COMING SOON**) | **Automate crafting things** in Infinite Craft and automatically **find and store recipes** for certain things. |
+| `autoinfinitecraft.py` (**Work in Progress**) | **Automate crafting things** in Infinite Craft and automatically **find and store recipes** for certain things. |
