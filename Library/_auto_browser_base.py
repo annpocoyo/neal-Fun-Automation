@@ -15,7 +15,8 @@ from selenium.webdriver.remote.webelement import WebElement # For type definitio
 
 class AutoBrowserBase:
     """This class contains all functions used to control the browser"""
-    def __init__(self, gecko_driver_path = None, url: str = "https://google.com"):
+    def __init__(self, gecko_driver_path = None, url: str = "https://google.com", 
+                 drag_duration: int = 250):
         # Initalize Class
         # Has the creator of this object not passed a path to geckodriver?
         if gecko_driver_path == None:
@@ -51,7 +52,7 @@ class AutoBrowserBase:
             self._action_key = Keys.CONTROL
         
         # Initalise action builder
-        self.builder = ActionChains(self.driver)
+        self.builder = ActionChains(self.driver, drag_duration)
     
     def drag_element_to_other_element(self, element: WebElement, target: WebElement):
         """Drag `element: WebElement` to `target: WebElement`"""
