@@ -33,10 +33,10 @@ class AutoInfiniteCraftClass(AutoBrowserBase):
         # Drag item 2 to crafting target to combine them
         super().drag_element_to_other_element(item2, self.crafting_target)
 
-    def get_item_list(self):
+    def _get_item_list(self):
         """Find and return a array of crafted item elements"""
         return self.driver.find_elements(By.CLASS_NAME, "items-inner")[0] \
             .find_elements(By.CLASS_NAME, "item")
 
     # Setup item list and make sure it auto updates every time it is requested
-    item_list = property(get_item_list)
+    item_list = property(_get_item_list)
