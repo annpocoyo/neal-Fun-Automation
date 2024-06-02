@@ -19,11 +19,11 @@ auto_infinite_craft = AutoInfiniteCraftClass()
 
 def main():
     # Get list of crafting combinations
-    craftingCombinations = auto_infinite_craft\
+    crafting_combinations = auto_infinite_craft\
         .get_all_pairs_of_list(auto_infinite_craft.item_list)
 
     # Craft all of the combinations together
-    for x in craftingCombinations:
+    for x in crafting_combinations:
         auto_infinite_craft.craft(x[0], x[1])
 
     while True:
