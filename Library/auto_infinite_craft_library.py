@@ -39,18 +39,14 @@ class AutoInfiniteCraftClass(AutoBrowserBase):
             continue
         time.sleep(0.105) # Wait a bit extra to avoid conflicts
 
-    def _get_item_list(self):
+    @property
+    def item_list(self):
         """Find and return a array of crafted item elements"""
         return self.driver.find_elements(By.CLASS_NAME, "items-inner")[0] \
             .find_elements(By.CLASS_NAME, "item")
     
-    def _get_board_item_list(self):
+    @property
+    def board_item_list(self):
         """Find and return a array of crafted item elements on the board"""
         return self.driver.find_elements(By.CLASS_NAME, "instances")[0] \
             .find_elements(By.CLASS_NAME, "item")
-
-    # Setup item list and make sure it auto updates every time it is requested
-    item_list = property(_get_item_list)
-
-    # Setup item on board list and make sure it auto updates every time it is requested
-    board_item_list = property(_get_board_item_list)
