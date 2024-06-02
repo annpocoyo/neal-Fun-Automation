@@ -15,7 +15,7 @@ class AutoInfiniteCraftClass(AutoBrowserBase):
     def __init__(self):
         # Initalize Class
         # First we need to contact our parent's constructer
-        super().__init__(url = "https://neal.fun/infinite-craft/", drag_duration = 50)
+        super().__init__(url = "https://neal.fun/infinite-craft/", drag_duration = 60)
 
         # Get neal.fun logo to be used as TARGET where items will be dragged and dropped
         self.crafting_target = self.driver.find_elements(By.CLASS_NAME, "site-title")[0]
