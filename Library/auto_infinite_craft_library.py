@@ -5,6 +5,7 @@ Inside this library:
 
 AutoInfiniteCraftClass - contains all functions used by autoinfinitecraft.py
 """
+import time # For delays
 from _auto_browser_base import AutoBrowserBase # Base for automatic browser control
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement # For intelisense
@@ -14,7 +15,7 @@ class AutoInfiniteCraftClass(AutoBrowserBase):
     def __init__(self):
         # Initalize Class
         # First we need to contact our parent's constructer
-        super().__init__(url = "https://neal.fun/infinite-craft/")
+        super().__init__(url = "https://neal.fun/infinite-craft/", drag_duration = 50)
 
         # Get neal.fun logo to be used as TARGET where items will be dragged and dropped
         self.crafting_target = self.driver.find_elements(By.CLASS_NAME, "site-title")[0]
@@ -34,8 +35,9 @@ class AutoInfiniteCraftClass(AutoBrowserBase):
         super().drag_element_to_other_element(item2, self.crafting_target)
 
         # Wait until items crafted
-        while len(self.board_item_list) != 1:
+        while len(self.board_item_list) == 2:
             continue
+        time.sleep(0.105) # Wait a bit extra to avoid conflicts
 
     def _get_item_list(self):
         """Find and return a array of crafted item elements"""
